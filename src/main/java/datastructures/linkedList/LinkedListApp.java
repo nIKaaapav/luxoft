@@ -17,6 +17,11 @@ public class LinkedListApp {
         System.out.println(found11); // true
         System.out.println(found33); // true
         System.out.println(found55); // false
+        linkedList.revert();
+        System.out.println(linkedList.toString()); // 11,22,33,44
+        linkedList.revert();
+        int indexOf = linkedList.indexOf(22);
+        System.out.printf("indexOf = %s \n", indexOf);
         System.out.println(linkedList.toString()); // 11,22,33,44
         Object remove = linkedList.remove(3);
         System.out.println(linkedList.toString()); // 11,33,44

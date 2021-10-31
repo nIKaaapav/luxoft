@@ -6,7 +6,7 @@ import java.util.StringJoiner;
 
 public class LinkedList implements List {
     class Node {
-        final Object value;
+        Object value;
         Node next;
 
         Node(Object value) {
@@ -64,9 +64,15 @@ public class LinkedList implements List {
         addTail(value);
     }
 
+    public void addRecurse_2(Node node, Object value, int index) {
+        if (node == null) return;
+        if (index == 0) node.value = value;
+        addRecurse_2(node.next, value,index - 1);
+    }
+
     @Override
     public void add(Object value, int index) {
-
+        addRecurse_2(head, value, index);
     }
 
     public Object getIterable(int index) {
@@ -220,9 +226,24 @@ public class LinkedList implements List {
         return indexOfRecurse(value, head, 0);
     }
 
+    public void revert() {
+        Node current = head;
+        Node previous = null;
+        while (current != null){
+            Node next = current.next;
+            current.next = previous;
+            previous = current;
+            current = next;
+        }
+        head = previous;
+    }
+
     @Override
     public int lastIndexOf(Object value) {
-        return 0;
+        revert();
+        int index = indexOf(value);
+        revert();
+        return index;
     }
 
     private String toStringRecurse(StringJoiner string, Node node){
