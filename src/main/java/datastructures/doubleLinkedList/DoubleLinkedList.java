@@ -93,30 +93,45 @@ public class DoubleLinkedList implements List {
         return null;
     }
 
-    private Object getRecurse(int index, Node node){
+    private Object getFromTail(int index, Node node){
         if (node == null) return null;
         if (index == 0) return node.value;
-        return getRecurse(index-1, node.next);
+        return getFromTail(index-1, node.prev);
+    }
+
+    private Object getFromHead(int index, Node node){
+        if (node == null) return null;
+        if (index == 0) return node.value;
+        return getFromHead(index-1, node.next);
     }
 
     @Override
     public Object get(int index) {
         if (index > size) throw new IllegalStateException();
-        return getRecurse(index, head);
+        return index > size / 2  ?  getFromTail(size - index, tail) : getFromHead(index, head);
     }
 
-    private Object set(Object value, int index,Node node) {
+    private Object setFromHead(Object value, int index,Node node) {
         if (node == null) return null;
         if (index == 0) {
             node.value = value;
             return node.value;
         }
-        return set(value, index-1, node.next);
+        return setFromHead(value, index-1, node.next);
+    }
+
+    private Object setFromTail(Object value, int index,Node node) {
+        if (node == null) return null;
+        if (index == 0) {
+            node.value = value;
+            return node.value;
+        }
+        return setFromTail(value, index-1, node.prev);
     }
 
     @Override
     public Object set(Object value, int index) {
-        return set(value, index, head);
+        return index > size / 2  ?  setFromTail(value, index, tail) : setFromHead(value, index, head);
     }
 
     @Override
