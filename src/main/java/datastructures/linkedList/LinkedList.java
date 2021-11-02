@@ -45,10 +45,7 @@ public class LinkedList implements List {
 
     private Node addTail_2(Object value,Node node){
         if (node == null) {
-            System.out.println("node == null");
-            System.out.println(value);
             Node node1 = new Node(value);
-            System.out.println(node1);
             return node1;
         }
         node.next = addTail_2(value, node.next);
