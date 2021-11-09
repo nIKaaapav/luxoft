@@ -6,85 +6,134 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 public class DoubleLinkedList implements List {
-    class Node {
-        Node next;
-        Node prev;
-        Object value;
-
-        public Node(Object value) {
-            this.value = value;
-        }
-    }
-
     Node head;
     Node tail;
     int size;
 
     @Override
     public void add(Object value, int index) {
-        if (index > size) throw new IllegalStateException();
-        if (index == size) add(value);
+        if (index > size || index < 0) {
+            throw new IndexOutOfBoundsException();
+        }  else if (value == null) {
+            throw new IllegalStateException();
+        }
 
         Node newNode = new Node(value);
-        if (index == 0) {
-            Node nextCurrentNode = head.next;
-            nextCurrentNode.prev = newNode;
-            head = newNode;
 
-            size += 1;
+        if (size == 0) {
+            head = tail = newNode;
+            size++;
+            return;
+        }else if (index == size) {
+            tail.next = newNode;
+            newNode.prev = tail;
+            tail = newNode;
+            size++;
+            return;
+        }else if (index == 0) {
+            Node nextCurrentNode = head;
+            head = newNode;
+            head.next = nextCurrentNode;
+            nextCurrentNode.prev = head;
+
+            size++;
+            return;
         } else {
             Node current = head;
-            int currentSize = 0;
+            int currentIndex = 0;
 
-            while (current != null) {
-                if (index  - 1 == currentSize) {
-                    Node nextNodeBrforeAdd = current.next;
-                    if (nextNodeBrforeAdd != null) nextNodeBrforeAdd.prev = newNode;
-                    newNode.next = current.next;
-                    current.next = newNode;
-                    size += 1;
-                    if (index == size) tail = newNode;
-                    return;
+            if (index >= (size - 1) / 2){
+                currentIndex = size - index;
+                current = tail;
+
+                for (int i = 0; i < size; i++) {
+                    if (currentIndex == i){
+                        Node nextNodeBeforeAdd = current.next;
+
+                        current.next = newNode;
+                        if (nextNodeBeforeAdd != null) {
+                            nextNodeBeforeAdd.prev = newNode;
+                        }
+                        newNode.next = nextNodeBeforeAdd;
+                        newNode.prev = current;
+                        size ++;
+                        return;
+                    }
+                    current = current.prev;
                 }
-                currentSize++;
-                current = current.next;
+            } else if (index < (size - 1) / 2) {
+                currentIndex = index;
+                current = head;
+                for (int i = 0; i < size; i++) {
+                    if (currentIndex - 1 == i){
+                        Node nextNodeBeforeAdd = current.next;
+
+                        current.next = newNode;
+                        if (nextNodeBeforeAdd != null) {
+                            nextNodeBeforeAdd.prev = newNode;
+                        }
+                        newNode.next = nextNodeBeforeAdd;
+                        newNode.prev = current;
+                        size ++;
+                        return;
+                    }
+                    current = current.next;
+                }
             }
+
+//
+//            while (current != null) {
+//                if (index  - 1 == currentSize) {
+//                    Node nextNodeBrforeAdd = current.next;
+//                    if (nextNodeBrforeAdd != null) nextNodeBrforeAdd.prev = newNode;
+//                    newNode.next = current.next;
+//                    current.next = newNode;
+//                    size += 1;
+//                    if (index == size) tail = newNode;
+//                    return;
+//                }
+//                currentSize++;
+//                current = current.next;
+//            }
 
         }
     }
 
     @Override
     public void add(Object value) {
-        Node nodeNew = new Node(value);
-        if (size == 0) {
-            head = tail = nodeNew;
-            head.next = tail;
-        } else  {
-            tail.next = nodeNew;
-            nodeNew.prev = tail;
-            tail = nodeNew;
-        }
-        size++;
+        add(value, size);
     }
 
     @Override
     public Object remove(int index) {
-        if (index > size) throw new IllegalStateException();
+        if (index > size - 1) {
+            throw new IllegalStateException();
+        } if (index < 0) {
+            throw new IllegalStateException();
+        }
 
         Node currentNode = head;
         Node nextNode = head.next;
         Node previousNode = null;
 
+        if (index == 0){
+            head = nextNode;
+            return currentNode.value;
+        } else if(index == size - 1){
+            Node currentRemovedNode = tail;
+            tail = tail.prev;
+            return currentRemovedNode.value;
+        }
+
         while (currentNode != null) {
             if (index == 0){
-                if (previousNode == null) {
-                    head = nextNode;
-                    return currentNode.value;
-                }
                 previousNode.next = nextNode;
-                if (nextNode != null) nextNode.prev = previousNode;
+                if (nextNode != null) {
+                    nextNode.prev = previousNode;
+                }
                 return currentNode.value;
             }
+
             previousNode = currentNode;
             currentNode = currentNode.next;
             nextNode = currentNode.next;
@@ -93,45 +142,37 @@ public class DoubleLinkedList implements List {
         return null;
     }
 
-    private Object getFromTail(int index, Node node){
+    private Node getNodeFromTail(int index, Node node){
         if (node == null) return null;
-        if (index == 0) return node.value;
-        return getFromTail(index-1, node.prev);
+        if (index == 0) return node;
+        return getNodeFromTail(index-1, node.prev);
     }
 
-    private Object getFromHead(int index, Node node){
+    private Node getNodeFromHead(int index, Node node){
         if (node == null) return null;
-        if (index == 0) return node.value;
-        return getFromHead(index-1, node.next);
+        if (index == 0) return node;
+        return getNodeFromHead(index-1, node.next);
+    }
+
+    private Node getNode(int index) {
+        if (index > size - 1) {
+            throw new IllegalStateException();
+        } else if (index < 0) {
+            throw new IllegalStateException();
+        }
+        return index > size / 2  ?  getNodeFromTail(size - 1 - index, tail) : getNodeFromHead(index, head);
     }
 
     @Override
     public Object get(int index) {
-        if (index > size) throw new IllegalStateException();
-        return index > size / 2  ?  getFromTail(size - index, tail) : getFromHead(index, head);
-    }
-
-    private Object setFromHead(Object value, int index,Node node) {
-        if (node == null) return null;
-        if (index == 0) {
-            node.value = value;
-            return node.value;
-        }
-        return setFromHead(value, index-1, node.next);
-    }
-
-    private Object setFromTail(Object value, int index,Node node) {
-        if (node == null) return null;
-        if (index == 0) {
-            node.value = value;
-            return node.value;
-        }
-        return setFromTail(value, index-1, node.prev);
+       return getNode(index).value;
     }
 
     @Override
     public Object set(Object value, int index) {
-        return index > size / 2  ?  setFromTail(value, index, tail) : setFromHead(value, index, head);
+        Node o = getNode(index);
+        o.value = value;
+        return o.value;
     }
 
     @Override
@@ -139,13 +180,6 @@ public class DoubleLinkedList implements List {
         head = null;
         tail = null;
         size = 0;
-    }
-
-    private int size(Node node, int size) {
-        System.out.printf("size = %s \n", size);
-        if (node == null) return size;
-        System.out.printf("value = %s \n", node.value);
-        return size(node.next, size + 1);
     }
 
     @Override
@@ -158,15 +192,9 @@ public class DoubleLinkedList implements List {
         return head == null;
     }
 
-    private boolean contains(Object value, Node node) {
-        if (node == null) return false;
-        if (Objects.equals(node.value, value)) return true;
-        return contains(value, node.next);
-    }
-
     @Override
     public boolean contains(Object value) {
-        return contains(value, head);
+        return indexOf(value) != -1;
     }
 
     private int indexOf(Object value, Node node, int index) {
@@ -177,18 +205,40 @@ public class DoubleLinkedList implements List {
 
     @Override
     public int indexOf(Object value) {
-        return indexOf(value, head, 0);
+        if (isEmpty()){
+            throw new IllegalStateException();
+        }
+
+        Node currentNode = head;
+        for (int i = 0; i < size - 1; i++) {
+            if (Objects.equals(value, currentNode.value)){
+                return i;
+            }
+            currentNode = currentNode.next;
+        }
+        return -1;
     }
 
     private int lastIndexOf(Object value, Node node, int index) {
         if (node == null) return -1;
         if (Objects.equals(node.value, value)) return index;
-        return indexOf(value, node.prev, index - 1);
+        return lastIndexOf(value, node.prev, index - 1);
     }
 
     @Override
     public int lastIndexOf(Object value) {
-        return lastIndexOf(value, tail, size - 1);
+        if (isEmpty()){
+            throw new IllegalStateException();
+        }
+
+        Node currentNode = tail;
+        for (int i = 0; i < size - 1; i++) {
+            if (Objects.equals(value, currentNode.value)){
+                return size - 1 - i;
+            }
+            currentNode = currentNode.prev;
+        }
+        return -1;
     }
 
     private String toString(StringJoiner stringJoiner, Node node) {
@@ -197,9 +247,24 @@ public class DoubleLinkedList implements List {
         return toString(stringJoiner, node.next);
     }
 
+    private static class Node {
+        Node next;
+        Node prev;
+        Object value;
+
+        private Node(Object value) {
+            this.value = value;
+        }
+    }
+
     @Override
     public String toString() {
-        StringJoiner stringJoiner = new StringJoiner(" ,", "[ ", " ]");
-        return toString(stringJoiner, head);
+        StringJoiner stringJoiner = new StringJoiner(", ", "[ ", " ]");
+        Node currentNode = head;
+        for (int i = 0; i < size; i++) {
+            stringJoiner.add(currentNode.value.toString());
+            currentNode = currentNode.next;
+        }
+        return stringJoiner.toString();
     }
 }

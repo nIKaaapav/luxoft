@@ -19,13 +19,13 @@ public class DoubleLinkedListTest {
     }
 
     @Test
-    public void testEmptyLinkedList(){
+    public void testisEmpty(){
         assertTrue(doubleLinkedList.isEmpty());
         assertEquals(0,doubleLinkedList.size());
     }
 
     @Test
-    public void testAddLinkedList(){
+    public void testAddValueInTheEnd(){
         doubleLinkedList.add("A");
         assertFalse(doubleLinkedList.isEmpty());
         assertEquals(1, doubleLinkedList.size());
@@ -39,32 +39,98 @@ public class DoubleLinkedListTest {
     }
 
     @Test
-    public void testAddByIndexLinkedList(){
+    public void testToString(){
         doubleLinkedList.add("A");
         doubleLinkedList.add("B");
-        doubleLinkedList.add("D", 1);
+        doubleLinkedList.add("C");
+        String currentValueString = "[ A, B, C ]";
 
         assertEquals(3, doubleLinkedList.size());
+        assertEquals(currentValueString, doubleLinkedList.toString());
     }
 
     @Test
-    public void testGetLinkedList(){
+    public void testAddValueInTheHead(){
         doubleLinkedList.add("A");
         doubleLinkedList.add("B");
+        doubleLinkedList.add("C");
+        doubleLinkedList.add("D",0);
+
+        assertEquals(4, doubleLinkedList.size());
+        String currentValueString = "[ D, A, B, C ]";
+        assertEquals(currentValueString, doubleLinkedList.toString());
+    }
+
+    @Test
+    public void testAddValueInTheTail(){
+        doubleLinkedList.add("A");
+        doubleLinkedList.add("B");
+        doubleLinkedList.add("C");
+        doubleLinkedList.add("D",doubleLinkedList.size());
+
+        assertEquals(4, doubleLinkedList.size());
+        String currentValueString = "[ A, B, C, D ]";
+        assertEquals(currentValueString, doubleLinkedList.toString());
+    }
+
+    @Test
+    public void testAddValueInTheMiddle(){
+        doubleLinkedList.add("A");
+        doubleLinkedList.add("B");
+        doubleLinkedList.add("C");
+        doubleLinkedList.add("D", 1);
+
+        assertEquals(4, doubleLinkedList.size());
+        String currentValueString = "[ A, D, B, C ]";
+        assertEquals(currentValueString, doubleLinkedList.toString());
+    }
+
+    @Test
+    public void testAddByIndexThrowExceptionThenIndexBiggerThenSize(){
+        doubleLinkedList.add("A");
+        doubleLinkedList.add("B");
+
+        assertThrows(IndexOutOfBoundsException.class,   () -> doubleLinkedList.add("C",4));
+    }
+
+    @Test
+    public void testAddByIndexThrowExceptionThenIndexIsNegativeBiggerThenSize(){
+        doubleLinkedList.add("A");
+        doubleLinkedList.add("B");
+
+        assertThrows(IndexOutOfBoundsException.class,   () -> doubleLinkedList.add("C",-1));
+    }
+
+    @Test
+    public void testAddByIndexThrowExceptionThenValueISNull(){
+        doubleLinkedList.add("A");
+        doubleLinkedList.add("B");
+
+        assertThrows(IllegalStateException.class,   () -> doubleLinkedList.add(null,1));
+    }
+
+    @Test
+    public void testGetByIndexFromHead(){
+        doubleLinkedList.add("A");
+        doubleLinkedList.add("B");
+        doubleLinkedList.add("C");
+        doubleLinkedList.add("D");
 
         assertEquals("B", doubleLinkedList.get(1));
     }
 
     @Test
-    public void testAddByIndexThrowExceptionThenIndexBiggerThenSizeLinkedList(){
+    public void testGetByIndexFromTail(){
         doubleLinkedList.add("A");
         doubleLinkedList.add("B");
+        doubleLinkedList.add("C");
+        doubleLinkedList.add("D");
 
-        assertThrows(IllegalStateException.class,   () -> doubleLinkedList.add("C",4));
+        assertEquals("D", doubleLinkedList.get(3));
     }
 
     @Test
-    public void testGetThrowExceptionThenIndexBiggerThenSizeLinkedList(){
+    public void testGetThrowExceptionThenIndexBiggerThenSize(){
         doubleLinkedList.add("A");
         doubleLinkedList.add("B");
 
@@ -72,21 +138,62 @@ public class DoubleLinkedListTest {
     }
 
     @Test
-    public void testRemoveLinkedList(){
+    public void testGetThrowExceptionThenIndexIsNegativeBiggerThenSize(){
         doubleLinkedList.add("A");
         doubleLinkedList.add("B");
 
-        assertEquals("B",   doubleLinkedList.remove(1));
-        assertEquals("A",   doubleLinkedList.remove(0));
-        assertTrue(doubleLinkedList.isEmpty());
+        assertThrows(IllegalStateException.class,   () -> doubleLinkedList.get(-1));
     }
 
     @Test
-    public void testRemoveThrowExceptionThenIndexBiggerThenSizeLinkedList(){
+    public void testGetThrowExceptionThenIndexEqualsSize(){
+        doubleLinkedList.add("A");
+        doubleLinkedList.add("B");
+
+        assertThrows(IllegalStateException.class,   () -> doubleLinkedList.get(2));
+    }
+
+    @Test
+    public void testRemoveFromHead(){
+        doubleLinkedList.add("A");
+        doubleLinkedList.add("B");
+
+        assertEquals("A",   doubleLinkedList.remove(0));
+    }
+
+    @Test
+    public void testRemoveFromTail(){
+        doubleLinkedList.add("A");
+        doubleLinkedList.add("B");
+        doubleLinkedList.add("C");
+
+        assertEquals("C",   doubleLinkedList.remove(2));
+    }
+
+    @Test
+    public void testRemoveFromMiddle(){
+        doubleLinkedList.add("A");
+        doubleLinkedList.add("B");
+        doubleLinkedList.add("C");
+        doubleLinkedList.add("D");
+
+        assertEquals("B",   doubleLinkedList.remove(1));
+    }
+
+    @Test
+    public void testRemoveThrowExceptionThenIndexBiggerThenSize(){
         doubleLinkedList.add("A");
         doubleLinkedList.add("B");
 
         assertThrows(IllegalStateException.class,   () -> doubleLinkedList.remove(4));
+    }
+
+    @Test
+    public void testRemoveThrowExceptionThenIndexEqualsSize(){
+        doubleLinkedList.add("A");
+        doubleLinkedList.add("B");
+
+        assertThrows(IllegalStateException.class,   () -> doubleLinkedList.remove(2));
     }
 
     @Test
@@ -106,9 +213,26 @@ public class DoubleLinkedListTest {
     public void testIndexOfLinkedList(){
         doubleLinkedList.add("A");
         doubleLinkedList.add("B");
+        doubleLinkedList.add("C");
+        doubleLinkedList.add("B");
 
         assertEquals(0,doubleLinkedList.indexOf("A"));
         assertEquals(1,doubleLinkedList.indexOf("B"));
+    }
+
+    @Test
+    public void testIndexOfNotFound(){
+        doubleLinkedList.add("A");
+        doubleLinkedList.add("B");
+        doubleLinkedList.add("C");
+        doubleLinkedList.add("B");
+
+        assertEquals(-1,doubleLinkedList.indexOf("S"));
+    }
+
+    @Test
+    public void testIndexOfThrowExceptionThenListIsEmpty(){
+        assertThrows(IllegalStateException.class,   () -> doubleLinkedList.indexOf("A"));
     }
 
 
@@ -135,7 +259,12 @@ public class DoubleLinkedListTest {
     }
 
     @Test
-    public void testContainsNotFoundLinkedList(){
+    public void testLastIndexOfThrowExceptionThenListIsEmpty(){
+        assertThrows(IllegalStateException.class,   () -> doubleLinkedList.lastIndexOf("A"));
+    }
+
+    @Test
+    public void testContainsNotFound(){
         doubleLinkedList.add("A");
         doubleLinkedList.add("B");
         doubleLinkedList.add("C");
@@ -145,7 +274,7 @@ public class DoubleLinkedListTest {
     }
 
     @Test
-    public void testContainsLinkedList(){
+    public void testContains(){
         doubleLinkedList.add("A");
         doubleLinkedList.add("B");
         doubleLinkedList.add("C");
@@ -157,7 +286,7 @@ public class DoubleLinkedListTest {
     }
 
     @Test
-    public void testSetLinkedList(){
+    public void testSet(){
         doubleLinkedList.add("A");
         doubleLinkedList.add("B");
         doubleLinkedList.add("C");
@@ -165,7 +294,35 @@ public class DoubleLinkedListTest {
 
         assertEquals("D",doubleLinkedList.set("D", 1));
         assertEquals("E",doubleLinkedList.set("E", 0));
+
+        String currentValueString = "[ E, D, C, A ]";
+        assertEquals(currentValueString, doubleLinkedList.toString());
     }
+
+    @Test
+    public void testSetThrowExceptionThenIndexBiggerThenSize(){
+        doubleLinkedList.add("A");
+        doubleLinkedList.add("B");
+
+        assertThrows(IllegalStateException.class,   () -> doubleLinkedList.set("D",4));
+    }
+
+    @Test
+    public void testSetThrowExceptionThenIndexIsNegativeBiggerThenSize(){
+        doubleLinkedList.add("A");
+        doubleLinkedList.add("B");
+
+        assertThrows(IllegalStateException.class,   () -> doubleLinkedList.set("D",-1));
+    }
+
+    @Test
+    public void testSetThrowExceptionThenIndexEqualsSize(){
+        doubleLinkedList.add("A");
+        doubleLinkedList.add("B");
+
+        assertThrows(IllegalStateException.class,   () -> doubleLinkedList.set(null,2));
+    }
+
 
 
 }
