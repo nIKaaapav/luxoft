@@ -322,7 +322,4 @@ public class DoubleLinkedListTest {
 
         assertThrows(IllegalStateException.class,   () -> doubleLinkedList.set(null,2));
     }
-
-
-
 }

@@ -1,21 +1,24 @@
 package datastructures.list;
 
+import java.util.Arrays;
+import java.util.StringJoiner;
+
 public class ArrayList implements List {
     private Object[] array;
     private int size;
 
-    public ArrayList(int size) {
-        this.array = new Object[size];
+    public ArrayList(int capacity) {
+        this.array = new Object[capacity];
     }
 
     public ArrayList() {
-        this.array = new Object[16];
+        this(20);
     }
 
-    private void increaseSize() {
+    private void increaseCapacityIfNeed() {
         if (array.length == size) {
-            int newSize = size * 2;
-            Object[] arrayNew = new Object[newSize];
+            int newSize = (int) (size * 1.5);
+            Object[] arrayNew = new Object[ newSize];
 
             System.arraycopy(array, 0, arrayNew, 0, size);
             size = newSize;
@@ -25,35 +28,57 @@ public class ArrayList implements List {
 
     @Override
     public void add(Object value) {
-        increaseSize();
-        array[size] = value;
-        size++;
+        add(value, size);
     }
 
     @Override
     public void add(Object value, int index) {
-        if(index > size){
-            increaseSize();
+        if (index > size || index < 0) {
+            throw new IndexOutOfBoundsException();
+        }  else if (value == null) {
+            throw new IllegalStateException();
         }
 
-        array[index] = value;
+        increaseCapacityIfNeed();
+        Object[] newArray = new Object[array.length];
+        int count = 0;
+
+        for (int i = 0; i < size + 1; i++) {
+            if (i == index) {
+                newArray[count] = value;
+                count++;
+            }
+
+            newArray[count] = array[i];
+            count++;
+        }
+        array = newArray;
+        size++;
     }
 
     @Override
     public Object remove(int index) {
         if (index >= size) {
-            throw new  IndexOutOfBoundsException("Index " + index+" out of bounds size ArrayList " + size);
+            throw new  IllegalStateException("Index " + index+" out of bounds size ArrayList " + size);
         }
         Object removedValue = array[index];
-        System.arraycopy(array, index + 1, array, index, array.length - index - 1);
+        Object[] newArray = new Object[size - 1];
+        int count = 0;
+
+        for (int i = 0; i < size - 1; i++) {
+            if (index != i){
+                newArray[count] = array[i];
+                count++;
+            }
+        }
         size--;
         return removedValue;
     }
 
     @Override
     public Object get(int index) {
-        if (index >= size) {
-            throw new  IndexOutOfBoundsException("Index " + index+" out of bounds size ArrayList " + size);
+        if (index >= size || index < 0) {
+            throw new  IllegalStateException("Index " + index+" out of bounds size ArrayList " + size);
         }
 
         return array[index];
@@ -61,13 +86,19 @@ public class ArrayList implements List {
 
     @Override
     public Object set(Object value, int index) {
-        increaseSize();
+        if (index >= size || index < 0) {
+            throw new  IndexOutOfBoundsException("Index " + index+" out of bounds size ArrayList " + size);
+        } else if (value == null) {
+            throw new IllegalStateException();
+        }
+
+        increaseCapacityIfNeed();
         return array[index] = value;
     }
 
     @Override
     public void clear() {
-        array = new Object[16];
+        array = new Object[20];
         size = 0;
     }
 
@@ -88,6 +119,10 @@ public class ArrayList implements List {
 
     @Override
     public int indexOf(Object value) {
+        if (value == null || isEmpty()) {
+            throw new IllegalStateException();
+        }
+
         for (int i = 0; i < size; i++) {
             if (array[i].equals(value)){
                 return i;
@@ -98,11 +133,24 @@ public class ArrayList implements List {
 
     @Override
     public int lastIndexOf(Object value) {
+        if (value == null || isEmpty()) {
+            throw new IllegalStateException();
+        }
+
         for (int i = size - 1; i >= 0; i--) {
             if (array[i].equals(value)){
                 return i;
             }
         }
         return -1;
+    }
+
+    @Override
+    public String toString() {
+        StringJoiner stringJoiner = new StringJoiner(", ", "[ ", " ]");
+        for (int i = 0; i < size; i++) {
+            stringJoiner.add(array[i].toString());
+        }
+        return stringJoiner.toString();
     }
 }

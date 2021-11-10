@@ -80,22 +80,6 @@ public class DoubleLinkedList implements List {
                     current = current.next;
                 }
             }
-
-//
-//            while (current != null) {
-//                if (index  - 1 == currentSize) {
-//                    Node nextNodeBrforeAdd = current.next;
-//                    if (nextNodeBrforeAdd != null) nextNodeBrforeAdd.prev = newNode;
-//                    newNode.next = current.next;
-//                    current.next = newNode;
-//                    size += 1;
-//                    if (index == size) tail = newNode;
-//                    return;
-//                }
-//                currentSize++;
-//                current = current.next;
-//            }
-
         }
     }
 
@@ -267,4 +251,6 @@ public class DoubleLinkedList implements List {
         }
         return stringJoiner.toString();
     }
+
+
 }

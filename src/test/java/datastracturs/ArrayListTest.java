@@ -1,151 +1,325 @@
 package datastracturs;
 
 import datastructures.list.ArrayList;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ArrayListTest {
-    @Test
-    void testAddWorkCorrectAndChangeSize(){
-        ArrayList arrayList = new ArrayList();
-        arrayList.add(1);
-        assertEquals(1, arrayList.size());
 
-        arrayList.add(2);
-        assertEquals(2, arrayList.size());
+    private ArrayList arrayList;
+
+
+    @BeforeEach
+    protected void setUp(){
+        arrayList = new ArrayList();
     }
 
     @Test
-    void testGetWorkCorrect(){
-        ArrayList arrayList = new ArrayList();
-        arrayList.add(1);
-        arrayList.add(2);
-
-        assertEquals(2,         arrayList.get(1));
-    }
-
-    @Test
-    void testIndexOutOfBoundsExceptionInWhenGetIsBiggerThenSize(){
-        ArrayList arrayList = new ArrayList();
-        arrayList.add(1);
-        arrayList.add(2);
-
-        assertThrows(IndexOutOfBoundsException.class,()-> arrayList.get(3));
-    }
-
-    @Test
-    void testIndexOfWorkCorrectWithExistingParameter(){
-        ArrayList arrayList = new ArrayList();
-        arrayList.add(1);
-        arrayList.add(2);
-
-        assertEquals(1,arrayList.indexOf(2));
-    }
-
-    @Test
-    void testIndexOfWorkCorrectWithNotExistingParameter(){
-        ArrayList arrayList = new ArrayList();
-        arrayList.add(1);
-        arrayList.add(2);
-
-        assertEquals(-1,arrayList.indexOf(3));
-    }
-
-    @Test
-    void testContainsWorkCorrectWithNotExistingParameter(){
-        ArrayList arrayList = new ArrayList();
-        arrayList.add(1);
-        arrayList.add(2);
-
-        assertFalse(arrayList.contains(3));
-    }
-
-    @Test
-    void testContainsWorkCorrectWithExistingParameter(){
-        ArrayList arrayList = new ArrayList();
-        arrayList.add(1);
-        arrayList.add(2);
-
-        assertTrue(arrayList.contains(2));
-    }
-
-    @Test
-    void testisEmptyWorkCorrect(){
-        ArrayList arrayList = new ArrayList();
+    public void testisEmpty(){
         assertTrue(arrayList.isEmpty());
-
-        arrayList.add(1);
-        arrayList.add(2);
-
-        assertFalse(arrayList.isEmpty());
-    }
-
-    @Test
-    void testisLastIndexOfCorrectExistingParameter(){
-        ArrayList arrayList = new ArrayList();
-
-        arrayList.add(1);
-        arrayList.add(2);
-        arrayList.add(1);
-
-        assertEquals(2,arrayList.lastIndexOf(1));
-    }
-
-    @Test
-    void testisLastIndexOfCorrectNotExistingParameter(){
-        ArrayList arrayList = new ArrayList();
-
-        arrayList.add(1);
-        arrayList.add(2);
-        arrayList.add(1);
-
-        assertEquals(-1, arrayList.lastIndexOf(3));
-    }
-
-    @Test
-    void testRemoveCorrect(){
-        ArrayList arrayList = new ArrayList();
-
-        arrayList.add(1);
-        arrayList.add(2);
-        arrayList.add(1);
-
-        assertEquals(2, arrayList.remove(1));
-    }
-
-    @Test
-    void testThrowsIndexOutOfBoundsExceptionOnRemoveIndexThenSize(){
-        ArrayList arrayList = new ArrayList();
-
-        arrayList.add(1);
-        arrayList.add(2);
-        arrayList.add(1);
-
-        assertThrows(IndexOutOfBoundsException.class, () -> arrayList.remove(3));
-    }
-
-    @Test
-    void testClearWorkCorrect(){
-        ArrayList arrayList = new ArrayList();
-        arrayList.add(1);
-        arrayList.add(2);
-        arrayList.add(1);
-        assertEquals(3,arrayList.size());
-        arrayList.clear();
         assertEquals(0,arrayList.size());
     }
 
     @Test
-    void testSetWorkCorrect(){
-        ArrayList arrayList = new ArrayList();
-        arrayList.add(1);
-        arrayList.add(2);
-        arrayList.add(1);
+    public void testAddValueInTheEnd(){
+        arrayList.add("A");
+        assertFalse(arrayList.isEmpty());
+        assertEquals(1, arrayList.size());
 
-        arrayList.set(2,2);
+        arrayList.add("B");
+        assertEquals(2, arrayList.size());
 
-        assertEquals(2,arrayList.get(2));
+        arrayList.add("C");
+        assertEquals(3, arrayList.size());
+
+    }
+
+    @Test
+    public void testToString(){
+        arrayList.add("A");
+        arrayList.add("B");
+        arrayList.add("C");
+        String currentValueString = "[ A, B, C ]";
+
+        assertEquals(3, arrayList.size());
+        assertEquals(currentValueString, arrayList.toString());
+    }
+
+    @Test
+    public void testAddValueInTheHead(){
+        arrayList.add("A");
+        arrayList.add("B");
+        arrayList.add("C");
+        arrayList.add("D",0);
+
+        assertEquals(4, arrayList.size());
+        String currentValueString = "[ D, A, B, C ]";
+        assertEquals(currentValueString, arrayList.toString());
+    }
+
+    @Test
+    public void testAddValueInTheTail(){
+        arrayList.add("A");
+        arrayList.add("B");
+        arrayList.add("C");
+        arrayList.add("D",arrayList.size());
+
+        assertEquals(4, arrayList.size());
+        String currentValueString = "[ A, B, C, D ]";
+        assertEquals(currentValueString, arrayList.toString());
+    }
+
+    @Test
+    public void testAddValueInTheMiddle(){
+        arrayList.add("A");
+        arrayList.add("B");
+        arrayList.add("C");
+        arrayList.add("D", 1);
+
+        assertEquals(4, arrayList.size());
+        String currentValueString = "[ A, D, B, C ]";
+        assertEquals(currentValueString, arrayList.toString());
+    }
+
+    @Test
+    public void testAddByIndexThrowExceptionThenIndexBiggerThenSize(){
+        arrayList.add("A");
+        arrayList.add("B");
+
+        assertThrows(IndexOutOfBoundsException.class,   () -> arrayList.add("C",4));
+    }
+
+    @Test
+    public void testAddByIndexThrowExceptionThenIndexIsNegativeBiggerThenSize(){
+        arrayList.add("A");
+        arrayList.add("B");
+
+        assertThrows(IndexOutOfBoundsException.class,   () -> arrayList.add("C",-1));
+    }
+
+    @Test
+    public void testAddByIndexThrowExceptionThenValueISNull(){
+        arrayList.add("A");
+        arrayList.add("B");
+
+        assertThrows(IllegalStateException.class,   () -> arrayList.add(null,1));
+    }
+
+    @Test
+    public void testGetByIndexFromHead(){
+        arrayList.add("A");
+        arrayList.add("B");
+        arrayList.add("C");
+        arrayList.add("D");
+
+        assertEquals("B", arrayList.get(1));
+    }
+
+    @Test
+    public void testGetByIndexFromTail(){
+        arrayList.add("A");
+        arrayList.add("B");
+        arrayList.add("C");
+        arrayList.add("D");
+
+        assertEquals("D", arrayList.get(3));
+    }
+
+    @Test
+    public void testGetThrowExceptionThenIndexBiggerThenSize(){
+        arrayList.add("A");
+        arrayList.add("B");
+
+        assertThrows(IllegalStateException.class,   () -> arrayList.get(4));
+    }
+
+    @Test
+    public void testGetThrowExceptionThenIndexIsNegativeBiggerThenSize(){
+        arrayList.add("A");
+        arrayList.add("B");
+
+        assertThrows(IllegalStateException.class,   () -> arrayList.get(-1));
+    }
+
+    @Test
+    public void testGetThrowExceptionThenIndexEqualsSize(){
+        arrayList.add("A");
+        arrayList.add("B");
+
+        assertThrows(IllegalStateException.class,   () -> arrayList.get(2));
+    }
+
+    @Test
+    public void testRemoveFromHead(){
+        arrayList.add("A");
+        arrayList.add("B");
+
+        assertEquals("A",   arrayList.remove(0));
+    }
+
+    @Test
+    public void testRemoveFromTail(){
+        arrayList.add("A");
+        arrayList.add("B");
+        arrayList.add("C");
+
+        assertEquals("C",   arrayList.remove(2));
+    }
+
+    @Test
+    public void testRemoveFromMiddle(){
+        arrayList.add("A");
+        arrayList.add("B");
+        arrayList.add("C");
+        arrayList.add("D");
+
+        assertEquals("B",   arrayList.remove(1));
+    }
+
+    @Test
+    public void testRemoveThrowExceptionThenIndexBiggerThenSize(){
+        arrayList.add("A");
+        arrayList.add("B");
+
+        assertThrows(IllegalStateException.class,   () -> arrayList.remove(4));
+    }
+
+    @Test
+    public void testRemoveThrowExceptionThenIndexEqualsSize(){
+        arrayList.add("A");
+        arrayList.add("B");
+
+        assertThrows(IllegalStateException.class,   () -> arrayList.remove(2));
+    }
+
+    @Test
+    public void testClearLinkedList(){
+        arrayList.add("A");
+        arrayList.add("B");
+
+        assertFalse(arrayList.isEmpty());
+
+        arrayList.clear();
+
+        assertTrue(arrayList.isEmpty());
+
+    }
+
+    @Test
+    public void testIndexOfLinkedList(){
+        arrayList.add("A");
+        arrayList.add("B");
+        arrayList.add("C");
+        arrayList.add("B");
+
+        assertEquals(0,arrayList.indexOf("A"));
+        assertEquals(1,arrayList.indexOf("B"));
+    }
+
+    @Test
+    public void testIndexOfNotFound(){
+        arrayList.add("A");
+        arrayList.add("B");
+        arrayList.add("C");
+        arrayList.add("B");
+
+        assertEquals(-1,arrayList.indexOf("S"));
+    }
+
+    @Test
+    public void testIndexOfThrowExceptionThenListIsEmpty(){
+        assertThrows(IllegalStateException.class,   () -> arrayList.indexOf("A"));
+    }
+
+
+    @Test
+    public void testLastIndexOfLinkedList(){
+        arrayList.add("A");
+        arrayList.add("B");
+        arrayList.add("C");
+        arrayList.add("A");
+
+        assertEquals(3,arrayList.lastIndexOf("A"));
+        assertEquals(2,arrayList.lastIndexOf("C"));
+    }
+
+
+    @Test
+    public void testLastIndexOfNotFoundLinkedList(){
+        arrayList.add("A");
+        arrayList.add("B");
+        arrayList.add("C");
+        arrayList.add("A");
+
+        assertEquals(-1,arrayList.lastIndexOf("D"));
+    }
+
+    @Test
+    public void testLastIndexOfThrowExceptionThenListIsEmpty(){
+        assertThrows(IllegalStateException.class,   () -> arrayList.lastIndexOf("A"));
+    }
+
+    @Test
+    public void testContainsNotFound(){
+        arrayList.add("A");
+        arrayList.add("B");
+        arrayList.add("C");
+        arrayList.add("A");
+
+        assertFalse(arrayList.contains("D"));
+    }
+
+    @Test
+    public void testContains(){
+        arrayList.add("A");
+        arrayList.add("B");
+        arrayList.add("C");
+        arrayList.add("A");
+
+        assertTrue(arrayList.contains("A"));
+        assertTrue(arrayList.contains("B"));
+        assertTrue(arrayList.contains("C"));
+    }
+
+    @Test
+    public void testSet(){
+        arrayList.add("A");
+        arrayList.add("B");
+        arrayList.add("C");
+        arrayList.add("A");
+
+        assertEquals("D",arrayList.set("D", 1));
+        assertEquals("E",arrayList.set("E", 0));
+
+        String currentValueString = "[ E, D, C, A ]";
+        assertEquals(currentValueString, arrayList.toString());
+    }
+
+    @Test
+    public void testSetThrowExceptionThenIndexBiggerThenSize(){
+        arrayList.add("A");
+        arrayList.add("B");
+
+        assertThrows(IndexOutOfBoundsException.class,   () -> arrayList.set("D",4));
+    }
+
+    @Test
+    public void testSetThrowExceptionThenIndexIsNegativeBiggerThenSize(){
+        arrayList.add("A");
+        arrayList.add("B");
+
+        assertThrows(IndexOutOfBoundsException.class,   () -> arrayList.set("D",-1));
+    }
+
+    @Test
+    public void testSetThrowExceptionThenIndexEqualsSize(){
+        arrayList.add("A");
+        arrayList.add("B");
+        arrayList.add("C");
+
+        assertThrows(IllegalStateException.class,   () -> arrayList.set(null,2));
     }
 }
