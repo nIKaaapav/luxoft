@@ -2,6 +2,7 @@ package datastructures.doubleLinkedList;
 
 import datastructures.list.List;
 
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -107,6 +108,9 @@ public class DoubleLinkedList implements List {
             Node currentRemovedNode = tail;
             tail = tail.prev;
             return currentRemovedNode.value;
+        } if (size == 1){
+            head = tail = null;
+            return currentNode.value;
         }
 
         while (currentNode != null) {
@@ -244,12 +248,35 @@ public class DoubleLinkedList implements List {
     @Override
     public String toString() {
         StringJoiner stringJoiner = new StringJoiner(", ", "[ ", " ]");
-        Node currentNode = head;
-        for (int i = 0; i < size; i++) {
-            stringJoiner.add(currentNode.value.toString());
-            currentNode = currentNode.next;
+        Iterator<Object> iterable = iterable();
+        while (iterable.hasNext()){
+            stringJoiner.add(iterable.next().toString());
+
         }
         return stringJoiner.toString();
+    }
+
+    @Override
+    public Iterator<Object> iterable() {
+        return new DoubleLinkedListIterator();
+    }
+
+
+    private class DoubleLinkedListIterator implements Iterator<Object> {
+        private int currentIndex;
+
+
+        @Override
+        public boolean hasNext() {
+            return currentIndex != size;
+        }
+
+        @Override
+        public Object next() {
+            Object currentObject = get(currentIndex);
+            currentIndex++;
+            return currentObject;
+        }
     }
 
 

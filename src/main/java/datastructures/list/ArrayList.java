@@ -1,6 +1,7 @@
 package datastructures.list;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.StringJoiner;
 
 public class ArrayList implements List {
@@ -148,9 +149,33 @@ public class ArrayList implements List {
     @Override
     public String toString() {
         StringJoiner stringJoiner = new StringJoiner(", ", "[ ", " ]");
-        for (int i = 0; i < size; i++) {
-            stringJoiner.add(array[i].toString());
+        Iterator<Object> iterable = iterable();
+
+        while (iterable.hasNext()){
+            stringJoiner.add(iterable.next().toString());
         }
+
         return stringJoiner.toString();
+    }
+
+    @Override
+    public Iterator<Object> iterable() {
+        return new ArrayListIterator();
+    }
+
+    private class ArrayListIterator implements Iterator<Object> {
+        private int currentIndex;
+
+        @Override
+        public boolean hasNext() {
+            return currentIndex != size;
+        }
+
+        @Override
+        public Object next() {
+            Object currentObject = get(currentIndex);
+            currentIndex++;
+            return currentObject;
+        }
     }
 }

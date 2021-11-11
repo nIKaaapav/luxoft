@@ -2,6 +2,7 @@ package datastructures.linkedList;
 
 import datastructures.list.List;
 
+import java.util.Iterator;
 import java.util.StringJoiner;
 
 public class LinkedList implements List {
@@ -252,6 +253,34 @@ public class LinkedList implements List {
     @Override
     public String toString() {
         StringJoiner stringJoiner = new StringJoiner(", ");
-        return toStringRecurse(stringJoiner, head);
+
+        Iterator<Object> iterable = iterable();
+
+        while (iterable.hasNext()){
+            stringJoiner.add(iterable.next().toString());
+        }
+
+        return stringJoiner.toString();
+    }
+
+    @Override
+    public Iterator<Object> iterable() {
+        return new LinkedListIterator();
+    }
+
+    private class LinkedListIterator implements Iterator<Object> {
+        private int currentIndex;
+
+        @Override
+        public boolean hasNext() {
+            return currentIndex != size();
+        }
+
+        @Override
+        public Object next() {
+            Object currentObject = get(currentIndex);
+            currentIndex++;
+            return currentObject;
+        }
     }
 }
