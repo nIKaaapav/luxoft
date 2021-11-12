@@ -11,6 +11,47 @@ public class DoubleLinkedList implements List {
     Node tail;
     int size;
 
+    private void addFromTail(int index, Node newNode){
+        int currentIndex = size - index;
+        Node currentNode = tail;
+
+        for (int i = 0; i < size; i++) {
+            if (currentIndex == i){
+                Node nextNodeBeforeAdd = currentNode.next;
+
+                currentNode.next = newNode;
+                if (nextNodeBeforeAdd != null) {
+                    nextNodeBeforeAdd.prev = newNode;
+                }
+                newNode.next = nextNodeBeforeAdd;
+                newNode.prev = currentNode;
+                size ++;
+                return;
+            }
+            currentNode = currentNode.prev;
+        }
+    }
+
+    private void addFromHead(int index, Node newNode){
+        int currentIndex = index;
+        Node current = head;
+        for (int i = 0; i < size; i++) {
+            if (currentIndex - 1 == i){
+                Node nextNodeBeforeAdd = current.next;
+
+                current.next = newNode;
+                if (nextNodeBeforeAdd != null) {
+                    nextNodeBeforeAdd.prev = newNode;
+                }
+                newNode.next = nextNodeBeforeAdd;
+                newNode.prev = current;
+                size ++;
+                return;
+            }
+            current = current.next;
+        }
+    }
+
     @Override
     public void add(Object value, int index) {
         if (index > size || index < 0) {
@@ -40,46 +81,10 @@ public class DoubleLinkedList implements List {
             size++;
             return;
         } else {
-            Node current = head;
-            int currentIndex = 0;
-
             if (index >= (size - 1) / 2){
-                currentIndex = size - index;
-                current = tail;
-
-                for (int i = 0; i < size; i++) {
-                    if (currentIndex == i){
-                        Node nextNodeBeforeAdd = current.next;
-
-                        current.next = newNode;
-                        if (nextNodeBeforeAdd != null) {
-                            nextNodeBeforeAdd.prev = newNode;
-                        }
-                        newNode.next = nextNodeBeforeAdd;
-                        newNode.prev = current;
-                        size ++;
-                        return;
-                    }
-                    current = current.prev;
-                }
+                addFromTail(index, newNode);
             } else if (index < (size - 1) / 2) {
-                currentIndex = index;
-                current = head;
-                for (int i = 0; i < size; i++) {
-                    if (currentIndex - 1 == i){
-                        Node nextNodeBeforeAdd = current.next;
-
-                        current.next = newNode;
-                        if (nextNodeBeforeAdd != null) {
-                            nextNodeBeforeAdd.prev = newNode;
-                        }
-                        newNode.next = nextNodeBeforeAdd;
-                        newNode.prev = current;
-                        size ++;
-                        return;
-                    }
-                    current = current.next;
-                }
+                addFromHead(index, newNode);
             }
         }
     }
@@ -220,6 +225,7 @@ public class DoubleLinkedList implements List {
         }
 
         Node currentNode = tail;
+
         for (int i = 0; i < size - 1; i++) {
             if (Objects.equals(value, currentNode.value)){
                 return size - 1 - i;
@@ -263,19 +269,23 @@ public class DoubleLinkedList implements List {
 
 
     private class DoubleLinkedListIterator implements Iterator<Object> {
-        private int currentIndex;
+        private Node current = head;
 
 
         @Override
         public boolean hasNext() {
-            return currentIndex != size;
+            return current.next != null;
         }
 
         @Override
         public Object next() {
-            Object currentObject = get(currentIndex);
-            currentIndex++;
+            Object currentObject = current.value;
+            current = current.next;
             return currentObject;
+        }
+
+        @Override
+        public void remove() {
         }
     }
 

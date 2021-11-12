@@ -99,7 +99,7 @@ public class ArrayList implements List {
 
     @Override
     public void clear() {
-        array = new Object[20];
+        array = new Object[array.length];
         size = 0;
     }
 
