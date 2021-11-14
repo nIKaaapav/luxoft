@@ -1,8 +1,6 @@
-package hw_5;
+package hw5;
 
-import hw_5.entit.Employee;
-
-import java.util.Arrays;
+import hw5.entit.Employee;
 
 public class EmployeeService {
     Employee[] employeeBD;

@@ -1,4 +1,4 @@
-package hw_5.entit;
+package hw5.entit;
 
 public abstract class Employee {
     public long id;

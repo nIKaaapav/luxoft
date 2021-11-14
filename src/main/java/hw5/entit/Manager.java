@@ -1,23 +1,18 @@
-package hw_5.entit;
+package hw5.entit;
 
-public class Developer extends Employee {
-    final int fixedBug;
-
-
-    public Developer(long id, String name, int age, int salary, char gender, int fixedBug) {
+public class Manager extends Employee {
+    public Manager(long id, String name, int age, int salary, char gender) {
         this.id = id;
         this.name = name;
         this.age = age;
         this.salary = salary;
         this.gender = gender;
-        this.fixedBug = fixedBug;
     }
 
     @Override
-    public int fullSalaryOnMonth() {
-        return (int) (this.salary + this.fixedBug * this.salary * 0.2);
+   public int fullSalaryOnMonth(){
+        return this.salary;
     }
-
 
     @Override
     public String print() {
@@ -27,16 +22,14 @@ public class Developer extends Employee {
                 "age:" + this.age +  " ; " +
                 "salary:" + this.salary +  " ; " +
                 "gender:" + this.gender + " ; " +
-                "gender:" + this.gender + " ; " +
-                "fixedBug:" + this.fixedBug;
+                "gender:" + this.gender;
 
     }
 
     @Override
     public String toString() {
-        return "Developer{" +
-                "fixedBug=" + fixedBug +
-                ", id=" + id +
+        return "Manager{" +
+                " id=" + id +
                 ", name='" + name + '\'' +
                 ", age=" + age +
                 ", salary=" + salary +

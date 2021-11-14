@@ -1,8 +1,8 @@
-package hw_5;
+package hw5;
 
-import hw_5.entit.Design;
-import hw_5.entit.Employee;
-import hw_5.entit.Manager;
+import hw5.entit.Design;
+import hw5.entit.Employee;
+import hw5.entit.Manager;
 
 import java.util.Arrays;
 
