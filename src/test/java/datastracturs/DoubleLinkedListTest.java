@@ -10,12 +10,12 @@ import java.util.StringJoiner;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DoubleLinkedListTest {
-    private DoubleLinkedList doubleLinkedList;
+    private DoubleLinkedList<String> doubleLinkedList;
 
 
     @BeforeEach
     protected void setUp(){
-        doubleLinkedList = new DoubleLinkedList();
+        doubleLinkedList = new DoubleLinkedList<String>();
     }
 
     @Test
@@ -79,7 +79,7 @@ public class DoubleLinkedListTest {
         doubleLinkedList.add("B");
         doubleLinkedList.add("C");
         doubleLinkedList.add("D", 1);
-
+        System.out.println(doubleLinkedList.toString());
         assertEquals(4, doubleLinkedList.size());
         String currentValueString = "[ A, D, B, C ]";
         assertEquals(currentValueString, doubleLinkedList.toString());

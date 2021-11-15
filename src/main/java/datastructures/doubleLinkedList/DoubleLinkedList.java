@@ -11,47 +11,6 @@ public class DoubleLinkedList<T> implements List<T> {
     Node tail;
     int size;
 
-    private void addFromTail(int index, Node newNode){
-        int currentIndex = size - index;
-        Node currentNode = tail;
-
-        for (int i = 0; i < size; i++) {
-            if (currentIndex == i){
-                Node nextNodeBeforeAdd = currentNode.next;
-
-                currentNode.next = newNode;
-                if (nextNodeBeforeAdd != null) {
-                    nextNodeBeforeAdd.prev = newNode;
-                }
-                newNode.next = nextNodeBeforeAdd;
-                newNode.prev = currentNode;
-                size ++;
-                return;
-            }
-            currentNode = currentNode.prev;
-        }
-    }
-
-    private void addFromHead(int index, Node newNode){
-        int currentIndex = index;
-        Node current = head;
-        for (int i = 0; i < size; i++) {
-            if (currentIndex - 1 == i){
-                Node nextNodeBeforeAdd = current.next;
-
-                current.next = newNode;
-                if (nextNodeBeforeAdd != null) {
-                    nextNodeBeforeAdd.prev = newNode;
-                }
-                newNode.next = nextNodeBeforeAdd;
-                newNode.prev = current;
-                size ++;
-                return;
-            }
-            current = current.next;
-        }
-    }
-
     @Override
     public void add(T value, int index) {
         if (index > size || index < 0) {
@@ -67,9 +26,13 @@ public class DoubleLinkedList<T> implements List<T> {
             size++;
             return;
         }else if (index == size) {
-            tail.next = newNode;
-            newNode.prev = tail;
+            System.out.println(index);
+            Node tailCurrent = this.tail;
+            tailCurrent.next = newNode;
+            newNode.prev = tailCurrent;
+            System.out.println(newNode.prev.value);
             tail = newNode;
+            System.out.println(tail.value);
             size++;
             return;
         }else if (index == 0) {
@@ -81,11 +44,13 @@ public class DoubleLinkedList<T> implements List<T> {
             size++;
             return;
         } else {
-            if (index >= (size - 1) / 2){
-                addFromTail(index, newNode);
-            } else if (index < (size - 1) / 2) {
-                addFromHead(index, newNode);
-            }
+            Node node = getNode(index);
+            Node prev = node.prev;
+            node.prev = newNode;
+            newNode.next = node;
+            prev.next = newNode;
+            newNode.prev = prev;
+            size++;
         }
     }
 
@@ -102,52 +67,46 @@ public class DoubleLinkedList<T> implements List<T> {
             throw new IllegalStateException();
         }
 
-        Node currentNode = head;
-        Node nextNode = head.next;
-        Node previousNode = null;
+        Node<T> currentNode = head;
+        Node<T> nextNode = head.next;
 
         if (index == 0){
             head = nextNode;
+            size--;
             return currentNode.value;
         } else if(index == size - 1){
-            Node currentRemovedNode = tail;
+            Node<T> currentRemovedNode = tail;
             tail = tail.prev;
+            size--;
             return currentRemovedNode.value;
         } if (size == 1){
             head = tail = null;
+            size--;
             return currentNode.value;
+        } else {
+            Node<T> node = getNode(index);
+            Node prev = node.prev;
+            Node next = node.next;
+            prev.next = next;
+            next.prev = prev;
+            size--;
+            return node.value;
         }
-
-        while (currentNode != null) {
-            if (index == 0){
-                previousNode.next = nextNode;
-                if (nextNode != null) {
-                    nextNode.prev = previousNode;
-                }
-                return currentNode.value;
-            }
-
-            previousNode = currentNode;
-            currentNode = currentNode.next;
-            nextNode = currentNode.next;
-            index--;
-        }
-        return null;
     }
 
-    private Node getNodeFromTail(int index, Node node){
+    private Node<T> getNodeFromTail(int index, Node node){
         if (node == null) return null;
         if (index == 0) return node;
         return getNodeFromTail(index-1, node.prev);
     }
 
-    private Node getNodeFromHead(int index, Node node){
+    private Node<T> getNodeFromHead(int index, Node node){
         if (node == null) return null;
         if (index == 0) return node;
         return getNodeFromHead(index-1, node.next);
     }
 
-    private Node getNode(int index) {
+    private Node<T> getNode(int index) {
         if (index > size - 1) {
             throw new IllegalStateException();
         } else if (index < 0) {
@@ -163,7 +122,7 @@ public class DoubleLinkedList<T> implements List<T> {
 
     @Override
     public T set(T value, int index) {
-        Node o = getNode(index);
+        Node<T> o = getNode(index);
         o.value = value;
         return o.value;
     }
@@ -241,7 +200,7 @@ public class DoubleLinkedList<T> implements List<T> {
         return toString(stringJoiner, node.next);
     }
 
-    private class Node {
+    private static class Node<T> {
         private Node next;
         private Node prev;
         private T value;
@@ -254,12 +213,19 @@ public class DoubleLinkedList<T> implements List<T> {
     @Override
     public String toString() {
         StringJoiner stringJoiner = new StringJoiner(", ", "[ ", " ]");
-        Iterator<T> iterable = iterable();
-        while (iterable.hasNext()){
-            stringJoiner.add(iterable.next().toString());
+        Node<T> curr = head;
 
+        while (curr != null){
+            stringJoiner.add(curr.value.toString());
+            curr = curr.next;
         }
+
+//        Iterator<T> iterable = iterable();
+//        while (iterable.hasNext()){
+//            stringJoiner.add(iterable.next().toString());
+//        }
         return stringJoiner.toString();
+
     }
 
     @Override
@@ -269,7 +235,7 @@ public class DoubleLinkedList<T> implements List<T> {
 
 
     private class DoubleLinkedListIterator implements Iterator<T> {
-        private Node current = head;
+        private Node<T> current = head;
 
 
         @Override
