@@ -4,12 +4,12 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.StringJoiner;
 
-public class ArrayList implements List {
-    private Object[] array;
+public class ArrayList<T> implements List<T> {
+    private T[] array;
     private int size;
 
     public ArrayList(int capacity) {
-        this.array = new Object[capacity];
+        this.array = (T[]) new Object[capacity];
     }
 
     public ArrayList() {
@@ -19,7 +19,7 @@ public class ArrayList implements List {
     private void increaseCapacityIfNeed() {
         if (array.length == size) {
             int newSize = (int) (size * 1.5);
-            Object[] arrayNew = new Object[ newSize];
+            T[] arrayNew = (T[]) new Object[ newSize];
 
             System.arraycopy(array, 0, arrayNew, 0, size);
             size = newSize;
@@ -28,12 +28,12 @@ public class ArrayList implements List {
     }
 
     @Override
-    public void add(Object value) {
+    public void add(T value) {
         add(value, size);
     }
 
     @Override
-    public void add(Object value, int index) {
+    public void add(T value, int index) {
         if (index > size || index < 0) {
             throw new IndexOutOfBoundsException();
         }  else if (value == null) {
@@ -41,7 +41,7 @@ public class ArrayList implements List {
         }
 
         increaseCapacityIfNeed();
-        Object[] newArray = new Object[array.length];
+        T[] newArray = (T[]) new Object[array.length];
         int count = 0;
 
         for (int i = 0; i < size + 1; i++) {
@@ -58,12 +58,12 @@ public class ArrayList implements List {
     }
 
     @Override
-    public Object remove(int index) {
+    public T remove(int index) {
         if (index >= size) {
             throw new  IllegalStateException("Index " + index+" out of bounds size ArrayList " + size);
         }
-        Object removedValue = array[index];
-        Object[] newArray = new Object[size - 1];
+        T removedValue = array[index];
+        T[] newArray = (T[]) new Object[size - 1];
         int count = 0;
 
         for (int i = 0; i < size - 1; i++) {
@@ -77,7 +77,7 @@ public class ArrayList implements List {
     }
 
     @Override
-    public Object get(int index) {
+    public T get(int index) {
         if (index >= size || index < 0) {
             throw new  IllegalStateException("Index " + index+" out of bounds size ArrayList " + size);
         }
@@ -86,7 +86,7 @@ public class ArrayList implements List {
     }
 
     @Override
-    public Object set(Object value, int index) {
+    public T set(T value, int index) {
         if (index >= size || index < 0) {
             throw new  IndexOutOfBoundsException("Index " + index+" out of bounds size ArrayList " + size);
         } else if (value == null) {
@@ -99,7 +99,7 @@ public class ArrayList implements List {
 
     @Override
     public void clear() {
-        array = new Object[array.length];
+        array = (T[]) new Object[array.length];
         size = 0;
     }
 
@@ -149,7 +149,7 @@ public class ArrayList implements List {
     @Override
     public String toString() {
         StringJoiner stringJoiner = new StringJoiner(", ", "[ ", " ]");
-        Iterator<Object> iterable = iterable();
+        Iterator<T> iterable = iterable();
 
         while (iterable.hasNext()){
             stringJoiner.add(iterable.next().toString());
@@ -159,11 +159,11 @@ public class ArrayList implements List {
     }
 
     @Override
-    public Iterator<Object> iterable() {
+    public Iterator<T> iterable() {
         return new ArrayListIterator();
     }
 
-    private class ArrayListIterator implements Iterator<Object> {
+    private class ArrayListIterator implements Iterator<T> {
         private int currentIndex;
 
         @Override
@@ -172,8 +172,8 @@ public class ArrayList implements List {
         }
 
         @Override
-        public Object next() {
-            Object currentObject = get(currentIndex);
+        public T next() {
+            T currentObject = get(currentIndex);
             currentIndex++;
             return currentObject;
         }

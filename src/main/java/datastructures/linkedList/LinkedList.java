@@ -5,12 +5,12 @@ import datastructures.list.List;
 import java.util.Iterator;
 import java.util.StringJoiner;
 
-public class LinkedList implements List {
-    class Node {
-        Object value;
-        Node next;
+public class LinkedList<T> implements List<T> {
+    private class Node {
+        private T value;
+        private Node next;
 
-        Node(Object value) {
+        private Node(T value) {
             this.value = value;
         }
 
@@ -25,13 +25,13 @@ public class LinkedList implements List {
 
     private Node head;
 
-    public void addHead(Object value){
+    public void addHead(T value){
         Node node = new Node(value);
         node.next = head;
         head = node;
     }
 
-    public void addItarable(Object value) {
+    public void addItarable(T value) {
         Node item = new Node(value);
         if (head == null) {
             head = item;
@@ -44,7 +44,7 @@ public class LinkedList implements List {
         }
     }
 
-    private Node addTail_2(Object value,Node node){
+    private Node addTail_2(T value,Node node){
         if (node == null) {
             Node node1 = new Node(value);
             return node1;
@@ -53,27 +53,27 @@ public class LinkedList implements List {
         return node;
     }
 
-    public void addTail(Object value){
+    public void addTail(T value){
         head = addTail_2(value, head);
     }
 
     @Override
-    public void add(Object value) {
+    public void add(T value) {
         addTail(value);
     }
 
-    public void addRecurse_2(Node node, Object value, int index) {
+    public void addRecurse_2(Node node, T value, int index) {
         if (node == null) return;
         if (index == 0) node.value = value;
         addRecurse_2(node.next, value,index - 1);
     }
 
     @Override
-    public void add(Object value, int index) {
+    public void add(T value, int index) {
         addRecurse_2(head, value, index);
     }
 
-    public Object getIterable(int index) {
+    public T getIterable(int index) {
         int indexCurrent = 0;
         Node currentNode = head;
         while (currentNode != null) {
@@ -86,19 +86,19 @@ public class LinkedList implements List {
         );
     }
 
-    public Object getRecurse_1(int index, Node node) {
-        if (node == null) return -1; // or null / Exception / Optional
+    public T getRecurse_1(int index, Node node) {
+        if (node == null) return null; // or null / Exception / Optional
         if (index == 0) return  node.value;
         return getRecurse_1(index - 1, node.next);
     }
 
-    public Object getRecurse(int index) {
+    public T getRecurse(int index) {
         return getRecurse_1(index, head);
     }
 
 
     @Override
-    public Object get(int index) {
+    public T get(int index) {
         return getRecurse(index);
     }
 
@@ -146,7 +146,7 @@ public class LinkedList implements List {
         return head == null;
     }
 
-    private boolean containsIterable(Object value) {
+    private boolean containsIterable(T value) {
         Node currentNode = head;
         while (!currentNode.value.equals(value)) {
             if (currentNode.value.equals(value)) return true;
@@ -155,19 +155,19 @@ public class LinkedList implements List {
         return false;
     }
 
-    private boolean containsRecurse(Object value, Node node) {
+    private boolean containsRecurse(T value, Node node) {
         if (node == null) return false;
         if(node.value.equals(value)) return true;
         else return containsRecurse(value, node.next);
     }
 
     @Override
-    public boolean contains(Object value) {
+    public boolean contains(T value) {
         return containsRecurse(value, head);
     }
 
     @Override
-    public Object remove(int index) {
+    public T remove(int index) {
        Node currentNode = head;
        Node previousNode = null;
        int currentSize = 0;
@@ -175,10 +175,10 @@ public class LinkedList implements List {
            if (currentSize == index){
               if(previousNode == null) {
                   head = head.next;
-                  return head;
+                  return head.value;
               }
               previousNode.next = currentNode.next;
-              return currentNode;
+              return currentNode.value;
            }
            currentSize++;
            previousNode = currentNode;
@@ -188,7 +188,7 @@ public class LinkedList implements List {
     }
 
     @Override
-    public Object set(Object value, int index) {
+    public T set(T value, int index) {
         Node currentNode = head;
         Node nextNode = null;
         Node previousNode = null;
@@ -198,12 +198,12 @@ public class LinkedList implements List {
                 if(previousNode == null) {
                     head = new Node(value);
                     head.next = nextNode;
-                    return head;
+                    return head.value;
                 }
                 currentNode = new Node(value);
                 previousNode.next = currentNode;
                 currentNode.next = nextNode;
-                return currentNode;
+                return currentNode.value;
             }
             currentSize++;
             previousNode = currentNode;
@@ -213,14 +213,14 @@ public class LinkedList implements List {
         return null;
     }
 
-    private int indexOfRecurse(Object value, Node node,int index) {
+    private int indexOfRecurse(T value, Node node,int index) {
         if (node == null) return -1;
         if(node.value.equals(value)) return index;
         else return indexOfRecurse(value, node.next, index + 1);
     }
 
     @Override
-    public int indexOf(Object value) {
+    public int indexOf(T value) {
         return indexOfRecurse(value, head, 0);
     }
 
@@ -237,7 +237,7 @@ public class LinkedList implements List {
     }
 
     @Override
-    public int lastIndexOf(Object value) {
+    public int lastIndexOf(T value) {
         revert();
         int index = indexOf(value);
         revert();
@@ -254,7 +254,7 @@ public class LinkedList implements List {
     public String toString() {
         StringJoiner stringJoiner = new StringJoiner(", ");
 
-        Iterator<Object> iterable = iterable();
+        Iterator<T> iterable = iterable();
 
         while (iterable.hasNext()){
             stringJoiner.add(iterable.next().toString());
@@ -264,11 +264,11 @@ public class LinkedList implements List {
     }
 
     @Override
-    public Iterator<Object> iterable() {
+    public Iterator<T> iterable() {
         return new LinkedListIterator();
     }
 
-    private class LinkedListIterator implements Iterator<Object> {
+    private class LinkedListIterator implements Iterator<T> {
         private int currentIndex;
 
         @Override
@@ -277,8 +277,8 @@ public class LinkedList implements List {
         }
 
         @Override
-        public Object next() {
-            Object currentObject = get(currentIndex);
+        public T next() {
+            T currentObject = get(currentIndex);
             currentIndex++;
             return currentObject;
         }

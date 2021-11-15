@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-public class DoubleLinkedList implements List {
+public class DoubleLinkedList<T> implements List<T> {
     Node head;
     Node tail;
     int size;
@@ -53,7 +53,7 @@ public class DoubleLinkedList implements List {
     }
 
     @Override
-    public void add(Object value, int index) {
+    public void add(T value, int index) {
         if (index > size || index < 0) {
             throw new IndexOutOfBoundsException();
         }  else if (value == null) {
@@ -90,12 +90,12 @@ public class DoubleLinkedList implements List {
     }
 
     @Override
-    public void add(Object value) {
+    public void add(T value) {
         add(value, size);
     }
 
     @Override
-    public Object remove(int index) {
+    public T remove(int index) {
         if (index > size - 1) {
             throw new IllegalStateException();
         } if (index < 0) {
@@ -157,12 +157,12 @@ public class DoubleLinkedList implements List {
     }
 
     @Override
-    public Object get(int index) {
+    public T get(int index) {
        return getNode(index).value;
     }
 
     @Override
-    public Object set(Object value, int index) {
+    public T set(T value, int index) {
         Node o = getNode(index);
         o.value = value;
         return o.value;
@@ -186,18 +186,18 @@ public class DoubleLinkedList implements List {
     }
 
     @Override
-    public boolean contains(Object value) {
+    public boolean contains(T value) {
         return indexOf(value) != -1;
     }
 
-    private int indexOf(Object value, Node node, int index) {
+    private int indexOf(T value, Node node, int index) {
         if (node == null) return -1;
         if (Objects.equals(node.value, value)) return index;
         return indexOf(value, node.next, index+1);
     }
 
     @Override
-    public int indexOf(Object value) {
+    public int indexOf(T value) {
         if (isEmpty()){
             throw new IllegalStateException();
         }
@@ -212,14 +212,14 @@ public class DoubleLinkedList implements List {
         return -1;
     }
 
-    private int lastIndexOf(Object value, Node node, int index) {
+    private int lastIndexOf(T value, Node node, int index) {
         if (node == null) return -1;
         if (Objects.equals(node.value, value)) return index;
         return lastIndexOf(value, node.prev, index - 1);
     }
 
     @Override
-    public int lastIndexOf(Object value) {
+    public int lastIndexOf(T value) {
         if (isEmpty()){
             throw new IllegalStateException();
         }
@@ -241,12 +241,12 @@ public class DoubleLinkedList implements List {
         return toString(stringJoiner, node.next);
     }
 
-    private static class Node {
-        Node next;
-        Node prev;
-        Object value;
+    private class Node {
+        private Node next;
+        private Node prev;
+        private T value;
 
-        private Node(Object value) {
+        private Node(T value) {
             this.value = value;
         }
     }
@@ -254,7 +254,7 @@ public class DoubleLinkedList implements List {
     @Override
     public String toString() {
         StringJoiner stringJoiner = new StringJoiner(", ", "[ ", " ]");
-        Iterator<Object> iterable = iterable();
+        Iterator<T> iterable = iterable();
         while (iterable.hasNext()){
             stringJoiner.add(iterable.next().toString());
 
@@ -263,12 +263,12 @@ public class DoubleLinkedList implements List {
     }
 
     @Override
-    public Iterator<Object> iterable() {
+    public Iterator<T> iterable() {
         return new DoubleLinkedListIterator();
     }
 
 
-    private class DoubleLinkedListIterator implements Iterator<Object> {
+    private class DoubleLinkedListIterator implements Iterator<T> {
         private Node current = head;
 
 
@@ -278,8 +278,8 @@ public class DoubleLinkedList implements List {
         }
 
         @Override
-        public Object next() {
-            Object currentObject = current.value;
+        public T next() {
+            T currentObject = current.value;
             current = current.next;
             return currentObject;
         }
