@@ -215,15 +215,10 @@ public class DoubleLinkedList<T> implements List<T> {
         StringJoiner stringJoiner = new StringJoiner(", ", "[ ", " ]");
         Node<T> curr = head;
 
-        while (curr != null){
-            stringJoiner.add(curr.value.toString());
-            curr = curr.next;
+        Iterator<T> iterable = iterable();
+        while (iterable.hasNext()){
+            stringJoiner.add(iterable.next().toString());
         }
-
-//        Iterator<T> iterable = iterable();
-//        while (iterable.hasNext()){
-//            stringJoiner.add(iterable.next().toString());
-//        }
         return stringJoiner.toString();
 
     }
@@ -240,7 +235,7 @@ public class DoubleLinkedList<T> implements List<T> {
 
         @Override
         public boolean hasNext() {
-            return current.next != null;
+            return current != null;
         }
 
         @Override
