@@ -12,7 +12,6 @@ public class WebServer {
 
         ServletContextHandler handler = new ServletContextHandler();
         handler.addServlet(new ServletHolder(new ProductServlet(connection)), "/products");
-        handler.addServlet(FileServlet.class, "/static/*");
 
         Server server = new Server(8080);
         server.setHandler(handler);
